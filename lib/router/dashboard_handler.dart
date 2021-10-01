@@ -1,3 +1,4 @@
+import 'package:admin_dashboard/ui/views/user_details_view.dart';
 import 'package:admin_dashboard/ui/views/users_view.dart';
 import 'package:fluro/fluro.dart';
 import 'package:provider/provider.dart';
@@ -53,13 +54,28 @@ class DashboardHandlers {
       /**aca si no esta autenticado puedo mandar un 404 */
       return LoginView();
   });
-  static Handler customers = Handler(handlerFunc: (context, parms) {
+  static Handler users = Handler(handlerFunc: (context, parms) {
     final authProvider = Provider.of<AuthProvider>(context!);
-    Provider.of<SideMenuProvider>(context, listen: false).setCurrentPage(Flurorouter.customersRoute);
+    Provider.of<SideMenuProvider>(context, listen: false).setCurrentPage(Flurorouter.usersRoute);
     if (authProvider.authStatus == AuthStatus.authenticated)
       return UsersView();
     else
       /**aca si no esta autenticado puedo mandar un 404 */
       return LoginView();
+  });
+  static Handler user = Handler(handlerFunc: (context, parms) {
+    final authProvider = Provider.of<AuthProvider>(context!);
+    Provider.of<SideMenuProvider>(context, listen: false).setCurrentPage(Flurorouter.userRoute);
+    if (authProvider.authStatus == AuthStatus.authenticated) {
+      // verificando si tiene el uid el url
+      if (parms['uid']?.first != null) {
+        return UserDetailsView(uid: parms['uid']!.first);
+      } else {
+        return UsersView();
+      }
+    } else {
+      /**aca si no esta autenticado puedo mandar un 404 */
+      return LoginView();
+    }
   });
 }
