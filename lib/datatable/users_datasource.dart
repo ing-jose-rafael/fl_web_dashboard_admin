@@ -7,17 +7,21 @@ class UsersDTS extends DataTableSource {
   @override
   DataRow? getRow(int index) {
     final usuario = users[index];
+    final image = Image(image: AssetImage('assets/no-image.jpg'), width: 35, height: 35);
     return DataRow.byIndex(
       index: index,
       cells: [
-        DataCell(Text('avatar $index')),
-        DataCell(Text('${usuario.nombre}')),
-        DataCell(Text('${usuario.correo}')),
-        DataCell(Text('${usuario.uid}')),
+        DataCell(ClipOval(child: image)),
+        DataCell(Text(usuario.nombre)),
+        DataCell(Text(usuario.correo)),
+        DataCell(Text(usuario.uid)),
         DataCell(Row(
           children: [
-            IconButton(onPressed: () {}, icon: Icon(Icons.edit_outlined)),
-            IconButton(onPressed: () {}, icon: Icon(Icons.delete_outline, color: Colors.red.withOpacity(0.8))),
+            IconButton(
+                onPressed: () {
+                  // TODO: NAVEGAR A  una nueva pantalla con el /uid
+                },
+                icon: Icon(Icons.edit_outlined)),
           ],
         )),
       ],
@@ -29,6 +33,7 @@ class UsersDTS extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
+  // cantidad de row
   int get rowCount => this.users.length;
 
   @override

@@ -34,14 +34,30 @@ class UsersView extends StatelessWidget {
           WhitrCard(
             title: 'Users Statistics',
             child: PaginatedDataTable(
+              sortAscending: usersProvider.ascending,
+              sortColumnIndex: usersProvider.sortColumnIdex,
               columns: [
                 DataColumn(label: Text('Avatar')),
-                DataColumn(label: Text('Nombre')),
-                DataColumn(label: Text('Email')),
+                DataColumn(
+                    label: Text('Nombre'),
+                    onSort: (colIndex, asc) {
+                      usersProvider.sortColumnIdex = colIndex;
+                      usersProvider.sort<String>((user) => user.nombre);
+                    }),
+                DataColumn(
+                    label: Text('Email'),
+                    onSort: (colIndex, asc) {
+                      usersProvider.sortColumnIdex = colIndex;
+                      usersProvider.sort<String>((user) => user.correo);
+                    }),
                 DataColumn(label: Text('UID')),
                 DataColumn(label: Text('Acciones')),
               ],
               source: sourceUser,
+              //cuando la pagina de la tabla cambia
+              onPageChanged: (page) {
+                print(page);
+              },
               header: Text(
                 'Usuarios Disponibles',
                 maxLines: 2,

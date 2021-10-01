@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 class UsersProvider extends ChangeNotifier {
   List<Usuario> users = [];
   bool isLoading = true;
+  bool ascending = true;
+  int? sortColumnIdex;
+
   /** en el momento que alquien requiera mi user provider quiero que se haga la petición  getUsers */
   UsersProvider() {
     this.getUsers();
@@ -18,6 +21,19 @@ class UsersProvider extends ChangeNotifier {
     isLoading = false;
     // print(usersResponse.total);
     // print(usersResponse.usuarios.length);
+    notifyListeners();
+  }
+
+  /// funsion generica para ordear, pide el campo por cual ordenar
+  void sort<T>(Comparable<T> Function(Usuario user) getField) {
+    users.sort((user1, user2) {
+      final user1Value = getField(user1); // retorna el campo que quiero obtener
+      final user2Value = getField(user2); // retorna el campo que quiero obtener
+      // operacion de comparación
+      return ascending ? Comparable.compare(user1Value, user2Value) : Comparable.compare(user2Value, user1Value);
+    });
+    ascending = !ascending;
+    // notificamos por que se cambio  el arreglo
     notifyListeners();
   }
 }
