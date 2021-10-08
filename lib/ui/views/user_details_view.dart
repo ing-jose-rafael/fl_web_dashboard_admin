@@ -31,6 +31,8 @@ class _UserDetailsViewState extends State<UserDetailsView> {
     userProvider.getUsersById(widget.uid).then((userDB) {
       if (userDB != null) {
         userFormProvider.user = userDB;
+        userFormProvider.formKey = new GlobalKey<FormState>();
+
         setState(() {
           this.user = userDB;
         });
