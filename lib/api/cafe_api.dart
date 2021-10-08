@@ -45,9 +45,9 @@ class CafeApi {
       // realizando la peticion Http
       final resp = await _dio.put(path, data: formData); // retorna un json object
       return resp.data;
-    } catch (e) {
+    } on DioError catch (e) {
       print(e);
-      throw ('Error en el PUT');
+      throw ('Error en el PUT $e');
     }
   }
 
