@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class UserFormProvider extends ChangeNotifier {
   // necesito mantener la información del usuario
   Usuario? user; // usuario opcional
-  GlobalKey<FormState> formKey = new GlobalKey<FormState>(); // para manejar las validaciones del formulario
+  late GlobalKey<FormState> formKey; // para manejar las validaciones del formulario
   bool _statusForm = true;
 
   /**
@@ -41,7 +41,6 @@ class UserFormProvider extends ChangeNotifier {
     };
     try {
       final resp = await CafeApi.put('/usuario/${user!.uid}', data);
-      print(resp);
       return true;
     } catch (e) {
       print('error en updateUser :$e');

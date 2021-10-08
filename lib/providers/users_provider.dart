@@ -24,7 +24,7 @@ class UsersProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Usuario> getUsersById(String uid) async {
+  Future<Usuario?> getUsersById(String uid) async {
     //petición ala Api
     try {
       final resp = await CafeApi.httpGet('/usuario/$uid'); // retorna un mapa
@@ -32,7 +32,7 @@ class UsersProvider extends ChangeNotifier {
       return user;
     } catch (e) {
       print(e);
-      throw e;
+      return null;
     }
   }
 
@@ -46,6 +46,14 @@ class UsersProvider extends ChangeNotifier {
     });
     ascending = !ascending;
     // notificamos por que se cambio  el arreglo
+    notifyListeners();
+  }
+
+  void refreshUser(Usuario newUser) {
+    this.users = this.users.map((user) {
+      if (user.uid == newUser.uid) user = newUser;
+      return user;
+    }).toList();
     notifyListeners();
   }
 }

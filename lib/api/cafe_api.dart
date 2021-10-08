@@ -21,8 +21,8 @@ class CafeApi {
       // realizando la peticion Http
       final resp = await _dio.get(path); // retorna un json object
       return resp.data;
-    } catch (e) {
-      print(e);
+    } on DioError catch (e) {
+      print(e.response);
       throw ('Error en el GET');
     }
   }
@@ -33,7 +33,7 @@ class CafeApi {
       // realizando la peticion Http
       final resp = await _dio.post(path, data: formData); // retorna un json object
       return resp.data;
-    } catch (e) {
+    } on DioError catch (e) {
       print(e);
       throw ('Error en el POST');
     }
@@ -56,7 +56,7 @@ class CafeApi {
       // realizando la peticion Http
       final resp = await _dio.delete(path); // retorna un json object
       return resp.data;
-    } catch (e) {
+    } on DioError catch (e) {
       print(e);
       throw ('Error en el PUT');
     }

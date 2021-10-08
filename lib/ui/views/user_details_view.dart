@@ -3,6 +3,7 @@
 import 'package:admin_dashboard/models/usuario_model.dart';
 import 'package:admin_dashboard/providers/user_form_provider.dart';
 import 'package:admin_dashboard/providers/users_provider.dart';
+import 'package:admin_dashboard/services/navigation_services.dart';
 import 'package:admin_dashboard/services/notification_services.dart';
 import 'package:admin_dashboard/ui/cards/white_card.dart';
 import 'package:admin_dashboard/ui/inputs/custom_inputs.dart';
@@ -28,11 +29,22 @@ class _UserDetailsViewState extends State<UserDetailsView> {
     final userProvider = Provider.of<UsersProvider>(context, listen: false);
     final userFormProvider = Provider.of<UserFormProvider>(context, listen: false);
     userProvider.getUsersById(widget.uid).then((userDB) {
-      userFormProvider.user = userDB;
-      setState(() {
-        this.user = userDB;
-      });
+      if (userDB != null) {
+        userFormProvider.user = userDB;
+        setState(() {
+          this.user = userDB;
+        });
+      } else {
+        NavigationService.replaceTo('/dashboard/users');
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    this.user = null;
+    Provider.of<UserFormProvider>(context, listen: false).user = null;
+    super.dispose();
   }
 
   @override
@@ -125,6 +137,7 @@ class _UserviewForm extends StatelessWidget {
             SizedBox(height: 20),
             TextFormField(
               initialValue: userFormProvider.user!.correo,
+              onChanged: (value) => userFormProvider.copyUserWith(correo: value),
               validator: (email) {
                 if (!EmailValidator.validate(email ?? '')) return 'El Email no es válido';
 
@@ -145,7 +158,8 @@ class _UserviewForm extends StatelessWidget {
                   final saved = await userFormProvider.updateUser();
                   if (saved) {
                     NotificationsService.showSnackBarOk('Usuario actualizado');
-                    // TODO: acua usuarios
+                    // actualizar usuario
+                    Provider.of<UsersProvider>(context, listen: false).refreshUser(userFormProvider.user!);
                   } else {
                     NotificationsService.showSnackBarError('No se pudo guardar');
                   }
